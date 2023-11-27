@@ -5,12 +5,13 @@ import java.util.List;
 int squareSize = 50;
 int x, y;  // Coordinates of the square
 boolean squareClicked = false;
-long startTime, reactionTime, menuTime;
-int squaresPerGroup = 3;
+long clickTime, reactionTime;
+int squaresPerGroup = 2;
 int squaresInCurrentGroup = 0;
 int currentGroup = 0; // Start with the first group
 Table table; // table
 int participantNum = 0;
+int tasksCompleted = 0;
 
 List<Integer> squareColors; // List to store square colors
 boolean isWhiteBackground = true; // Flag to track background color
@@ -38,12 +39,9 @@ void setup() {
 
   // Randomly set the background color
   isWhiteBackground = random(1) > 0.5;
-
-  // Start the first square
+  
   x = (int) random(width - squareSize);
   y = (int) random(height - squareSize);
-  squareClicked = false;
-  startTime = millis();
 }
 
 
@@ -55,6 +53,8 @@ void draw() {
       rect(x, y, squareSize, squareSize);
     }
   } else {
+    background(255);
+    fill(0);
     textSize(20);
     text("In this experiment all you have to do is use the mouse", 500, 400);
     text("to click the colored squares as quickly as possible", 500, 420);
@@ -67,8 +67,7 @@ void mousePressed() {
   if (!squareClicked && started) {
     // Check if the mouse coordinates are within the square
     if (mouseX >= x && mouseX <= x + squareSize && mouseY >= y && mouseY <= y + squareSize) {
-      reactionTime = millis() - startTime - menuTime;
-      menuTime = 0;
+      reactionTime = millis() - clickTime;
       String colorName = getColorName(currentGroup);
       String backgroundColor = isWhiteBackground ? "white" : "black";
       println("Your reaction time to " + colorName + " square on " + backgroundColor + " background: " + reactionTime + " milliseconds");
@@ -98,28 +97,50 @@ void mousePressed() {
   } else if (!squareClicked && !started) {
     if (mouseX >= 650 && mouseX <= 650 + squareSize && mouseY >= 470 && mouseY <= 470 + squareSize) {
       started = true;
-      menuTime = millis();
+      clickTime = millis();
     }
   }
 }
 
 void nextSquare() {
-  x = (int) random(width - squareSize);
-  y = (int) random(height - squareSize);
-  squareClicked = false;
-  startTime = millis();
-
-  squaresInCurrentGroup++;
-
-  if (squaresInCurrentGroup >= squaresPerGroup) {
-    currentGroup++;
+  tasksCompleted++;
+  if (tasksCompleted >= squaresPerGroup * 6) {
+    tasksCompleted = 0;
+    participantNum++;
+    currentGroup = 0;
     squaresInCurrentGroup = 0;
-
-    // If all groups are shown, reshuffle the colors list and toggle background color
-    if (currentGroup >= squareColors.size()) {
-      Collections.shuffle(squareColors);
-      currentGroup = 0;
-      isWhiteBackground = !isWhiteBackground; // Toggle background color
+    
+    // Shuffle the list using Collections.shuffle
+    Collections.shuffle(squareColors);
+  
+    // Randomly set the background color
+    isWhiteBackground = random(1) > 0.5;
+  
+    // Start the first square
+    x = (int) random(width - squareSize);
+    y = (int) random(height - squareSize);
+    squareClicked = false;
+    
+    started = false;
+  } 
+  else {
+    x = (int) random(width - squareSize);
+    y = (int) random(height - squareSize);
+    squareClicked = false;
+    clickTime = millis();
+  
+    squaresInCurrentGroup++;
+  
+    if (squaresInCurrentGroup >= squaresPerGroup) {
+      currentGroup++;
+      squaresInCurrentGroup = 0;
+  
+      // If all groups are shown, reshuffle the colors list and toggle background color
+      if (currentGroup >= squareColors.size()) {
+        Collections.shuffle(squareColors);
+        currentGroup = 0;
+        isWhiteBackground = !isWhiteBackground; // Toggle background color
+      }
     }
   }
 }

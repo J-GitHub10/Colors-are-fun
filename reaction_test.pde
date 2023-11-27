@@ -16,6 +16,15 @@ List<Integer> squareColors; // List to store square colors
 boolean isWhiteBackground = true; // Flag to track background color
 boolean started = false; // Program start bool
 
+ /* COLOR CODES (RGB)
+  color(88, 101, 242);        //Discord Blue
+  color(255,69,0);            //Reddit Red 
+  color(77, 217, 100);        //iOS Green
+
+  color(255, 255, 255);       //Chrome Light Mode (white)
+  color(53, 54, 58);          //Chrome Dark Mode
+  */
+
 void setup() {
   fullScreen();
   noStroke();
@@ -27,11 +36,12 @@ void setup() {
   table.addColumn("button_color");
   table.addColumn("reaction_time");
 
+
   // Initialize the list with colors
   squareColors = new ArrayList<>();
-  squareColors.add(color(255, 0, 0)); // Red color
-  squareColors.add(color(0, 255, 0)); // Green color
-  squareColors.add(color(0, 0, 255)); // Blue color
+  squareColors.add(color(255,69,0));     // Red color (Reddit)
+  squareColors.add(color(77, 217, 100)); // Green color (iOS)
+  squareColors.add(color(88, 101, 242)); // Blue color (Discord)
 
   // Shuffle the list using Collections.shuffle
   Collections.shuffle(squareColors);
@@ -128,12 +138,12 @@ void nextSquare() {
 String getColorName(int index) {
   if (index >= 0 && index < squareColors.size()) {
     int colorValue = squareColors.get(index);
-    if (colorValue == color(255, 0, 0)) {
-      return "Red";
-    } else if (colorValue == color(0, 255, 0)) {
-      return "Green";
-    } else if (colorValue == color(0, 0, 255)) {
-      return "Blue";
+    if (colorValue == color(255,69,0)) {
+      return "Reddit Red";
+    } else if (colorValue == color(77, 217, 100)) {
+      return "iOS Green";
+    } else if (colorValue == color(88, 101, 242)) {
+      return "Discord Blue";
     }
   }
   return "Unknown";
